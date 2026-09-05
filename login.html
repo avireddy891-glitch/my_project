@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Inline styles specifically for login page to avoid cluttering main css too much, but we will add main ones to style.css -->
+</head>
+
+<body class="login-body">
+    <div class="background-elements">
+        <div class="glow-orb" id="orb-left"></div>
+        <div class="glow-orb" id="orb-right"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="card-header" style="justify-content: center; margin-bottom: 1rem;">
+                <span class="icon" style="font-size: 2.5rem;">🏠</span>
+            </div>
+            <h2 style="text-align: center; font-family: 'Outfit', sans-serif; color: white; margin-bottom: 0.5rem;">
+                Welcome Back</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Sign in to
+                access your dashboard</p>
+
+            <div id="login-error" class="login-error" style="display: none;">Invalid credentials</div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-login">
+                    <span class="btn-icon">🔓</span> Login Securely
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                Don't have an account? <a href="/signup.html" style="color: var(--accent-blue); text-decoration: none; font-weight: 600;">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+
+</html>

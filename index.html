@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-elements">
+        <div class="glow-orb" id="orb-left"></div>
+        <div class="glow-orb" id="orb-right"></div>
+    </div>
+
+    <div class="dashboard-container">
+        <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1><span class="icon">🏠</span> Smart Home Hazard Shield</h1>
+                <p class="subtitle">Real-time environmental monitoring dashboard</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="openSettings()" class="btn"
+                    style="padding: 0.5rem 1rem; font-size: 0.9rem; background: var(--card-bg); border: 1px solid rgba(0,0,0, 0.1); color: var(--text-main);">
+                    <span class="icon">⚙️</span> Settings
+                </button>
+                <button onclick="logout()" class="btn btn-logout"
+                    style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;">
+                    <span class="icon">🚪</span> Logout
+                </button>
+            </div>
+        </header>
+
+        <main class="grid-layout">
+
+
+            <div class="card status-card">
+                <div class="card-header">
+                    <span class="icon status-icon">🛡️</span>
+                    <h2>System Status</h2>
+                </div>
+                <div class="card-body">
+                    <div id="status-container" class="status-badge normal-status">
+                        <span id="status-icon-internal">⌛</span>
+                        <span id="status">Connecting...</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Living Room Controls Row -->
+            <div class="card controls-card full-width">
+                <div class="card-header">
+                    <span class="icon">🛋️</span>
+                    <h2>Living Room Controls</h2>
+                </div>
+                <div class="card-body" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Lights -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">💡</span> Lights
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-lights-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('lights', 'ON')">ON</button>
+                                <button id="btn-lights-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('lights', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-lights" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-lights-power">--</span> W</span>
+                                <span>🌡️ <span id="data-lights-temp">--</span> °C</span>
+                                <span>💨 <span id="data-lights-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fan -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">🌀</span> Fan
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-fan-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('fan', 'ON')">ON</button>
+                                <button id="btn-fan-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('fan', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-fan" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-fan-power">--</span> W</span>
+                                <span>🌡️ <span id="data-fan-temp">--</span> °C</span>
+                                <span>💨 <span id="data-fan-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TV -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">📺</span> TV
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-tv-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('tv', 'ON')">ON</button>
+                                <button id="btn-tv-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('tv', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-tv" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-tv-power">--</span> W</span>
+                                <span>🌡️ <span id="data-tv-temp">--</span> °C</span>
+                                <span>💨 <span id="data-tv-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bedroom Controls Row -->
+            <div class="card controls-card full-width">
+                <div class="card-header">
+                    <span class="icon">🛏️</span>
+                    <h2>Bedroom Controls</h2>
+                </div>
+                <div class="card-body" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Lights -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">💡</span> Lights
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-bedroom_lights-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('bedroom_lights', 'ON')">ON</button>
+                                <button id="btn-bedroom_lights-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('bedroom_lights', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-bedroom_lights" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-bedroom_lights-power">--</span> W</span>
+                                <span>🌡️ <span id="data-bedroom_lights-temp">--</span> °C</span>
+                                <span>💨 <span id="data-bedroom_lights-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fan -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">🌀</span> Fan
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-bedroom_fan-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('bedroom_fan', 'ON')">ON</button>
+                                <button id="btn-bedroom_fan-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('bedroom_fan', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-bedroom_fan" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-bedroom_fan-power">--</span> W</span>
+                                <span>🌡️ <span id="data-bedroom_fan-temp">--</span> °C</span>
+                                <span>💨 <span id="data-bedroom_fan-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- AC -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">❄️</span> AC
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-bedroom_ac-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('bedroom_ac', 'ON')">ON</button>
+                                <button id="btn-bedroom_ac-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('bedroom_ac', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-bedroom_ac" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-bedroom_ac-power">--</span> W</span>
+                                <span>🌡️ <span id="data-bedroom_ac-temp">--</span> °C</span>
+                                <span>💨 <span id="data-bedroom_ac-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kitchen Controls Row -->
+            <div class="card controls-card full-width">
+                <div class="card-header">
+                    <span class="icon">🍳</span>
+                    <h2>Kitchen Controls</h2>
+                </div>
+                <div class="card-body" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Lights -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">💡</span> Lights
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-kitchen_lights-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('kitchen_lights', 'ON')">ON</button>
+                                <button id="btn-kitchen_lights-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('kitchen_lights', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-kitchen_lights" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-kitchen_lights-power">--</span> W</span>
+                                <span>🌡️ <span id="data-kitchen_lights-temp">--</span> °C</span>
+                                <span>💨 <span id="data-kitchen_lights-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fan -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">🌀</span> Fan
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-kitchen_fan-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('kitchen_fan', 'ON')">ON</button>
+                                <button id="btn-kitchen_fan-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('kitchen_fan', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-kitchen_fan" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-kitchen_fan-power">--</span> W</span>
+                                <span>🌡️ <span id="data-kitchen_fan-temp">--</span> °C</span>
+                                <span>💨 <span id="data-kitchen_fan-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Microwave -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">♨️</span> Microwave
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-kitchen_microwave-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('kitchen_microwave', 'ON')">ON</button>
+                                <button id="btn-kitchen_microwave-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('kitchen_microwave', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-kitchen_microwave" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-kitchen_microwave-power">--</span> W</span>
+                                <span>🌡️ <span id="data-kitchen_microwave-temp">--</span> °C</span>
+                                <span>💨 <span id="data-kitchen_microwave-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Refrigerator -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                            <span class="icon" style="font-size: 1.5rem;">🧊</span> Refrigerator
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="btn-kitchen_refrigerator-on" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('kitchen_refrigerator', 'ON')">ON</button>
+                                <button id="btn-kitchen_refrigerator-off" class="btn btn-off" style="min-width: 80px; padding: 0.6rem 1.2rem; font-size: 0.95rem; transition: 0.3s;" onclick="controlDevice('kitchen_refrigerator', 'OFF')">OFF</button>
+                            </div>
+                            <div id="data-kitchen_refrigerator" style="display: none; font-size: 0.85rem; color: var(--text-muted); gap: 0.8rem;">
+                                <span>⚡ <span id="data-kitchen_refrigerator-power">--</span> W</span>
+                                <span>🌡️ <span id="data-kitchen_refrigerator-temp">--</span> °C</span>
+                                <span>💨 <span id="data-kitchen_refrigerator-gas">--</span> ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Row -->
+            <div class="card history-card full-width">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span class="icon">📈</span>
+                        <h2 style="margin: 0;">Data History</h2>
+                    </div>
+                    <button onclick="openDeviceHistoryModal()" class="btn btn-off" style="padding: 0.5rem 1rem; font-size: 0.9rem; min-width: auto;">
+                        <span class="icon">📋</span> Device Telemetry
+                    </button>
+                </div>
+                <div class="card-body" style="position: relative; height:30vh; width:100%">
+                    <canvas id="historyChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content card">
+            <h2><span class="icon">⚙️</span> Alert Settings</h2>
+            <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Configure when the system triggers a hazard state.</p>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Temperature Threshold (°C)</label>
+                <input type="number" id="tempThreshold" class="settings-input" step="0.1" />
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Gas Level Threshold (ppm)</label>
+                <input type="number" id="gasThreshold" class="settings-input" />
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="saveSettings()" class="btn btn-on" style="flex: 1; padding: 0.8rem;">Save</button>
+                <button onclick="closeSettings()" class="btn btn-off" style="flex: 1; padding: 0.8rem;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast Area -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Device Telemetry History Modal -->
+    <div id="deviceHistoryModal" class="modal">
+        <div class="modal-content card" style="max-width: 700px; width: 95%; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="font-family: var(--font-heading); font-size: 1.3rem; margin: 0;"><span class="icon">📋</span> Device Telemetry History</h2>
+                <button onclick="closeDeviceHistoryModal()" class="btn btn-off" style="padding: 0.5rem; min-width: auto; border-radius: 50%;">❌</button>
+            </div>
+            <div class="telemetry-table-container">
+                <table class="telemetry-table" id="deviceHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Device</th>
+                            <th>Power (W)</th>
+                            <th>Temp (°C)</th>
+                            <th>Gas (ppm)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
